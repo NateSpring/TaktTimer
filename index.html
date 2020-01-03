@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>In the Ditch - Takt Timer</title>
+  <link rel="stylesheet" type="text/css" href="style.css" />
+  <link href="https://fonts.googleapis.com/css?family=Montserrat:400,500,700,900&display=swap" rel="stylesheet">
+</head>
+
+<body>
+  <!--
+      Demo Data
+    ?productName=Laser&prepTime=.10&taktTime=.11&tearTime=.12&productQuan=2
+    -->
+
+<!-- SUCCESS MODAL -->
+<div id="myModal" class="modal">
+    <div class="modal-content">
+        <p class="close" onclick="hideModal()">&times;</p>
+<div id="modal-internals">
+      <p id="modal-text">CONGRATULATIONS!!! <br /> YOU MET TAKT TIME!</p>
+      <br />
+      <img src="assets/ITD-Logo-White.png" id="logo2">
+    </div>
+</div>  
+  </div>
+
+  <!-- FAIL MODAL-->
+  <div id="myModal2" class="modal">
+    <div class="modal-content-fail">
+        <p class="close" onclick="hideModal()">&times;</p>
+<div id="modal-internals">
+      <p id="modal-text">SORRY! <br /> YOU DIDN'T MEET TAKT TIME!</p>
+      <br />
+      <img src="assets/ITD-Logo-White.png" id="logo2">
+    </div>
+</div>  
+  </div>
+
+
+<!--App Container-->
+<div class="app-container">
+
+  <!--Left Column Container-->
+  <!--Left Column Container also acts as an andon: see indicator classes for different color choices-->
+  <div class="column-left indicator-blue" id="overall-indicator">
+      <!--Second Content Container to help control overflow problems-->
+      <div class="left-content-container">
+          <!--Title-->
+          <div class="left-column-cell">
+              <p class="description" id="department">
+                  DEPARTMENT
+              </p>
+              <p id="part-number">
+                  ITD PART #
+              </p>
+          </div>
+          <!--Total Takt Time-->
+          <div class="left-column-cell">
+              <p class="description">
+                  TOTAL TAKT TIME
+              </p>
+              <p class="total-takt">
+                  <span class="total-takt" id="timer-hours-total">00</span>
+                  <span class="total-takt" id="timer-minutes-total">:00</span>
+                  <span class="total-takt" id="timer-seconds-total">:00</span>
+              </p>
+          </div>
+          <!--Status Indicator Text-->
+          <div class="left-column-cell">
+              <p class="text-status" id="text-status">
+                 IDLE
+              </p>
+          </div>
+          <!--ITD Logo-->
+          <div class="left-column-cell">
+              <img src="assets/ITD-Logo-White.png" id="logo">
+          </div>
+      </div>
+  </div>
+
+  <!--Right Side Grid-->
+  <div class="column-right">
+      <!--Right Content Container-->
+      <!--Different components of the overall timer each own thier own grid cell, each grid cell container also acts as an andon-->
+      <div class="right-content-container">
+
+          <!--Start Time-->
+          <div class="grid-cell btn" id="start-time-container">
+              <p class="sub-description">START TIME</p>
+              <p class="right-column-timer" id="start-time">12:00AM</p>
+          </div>
+          <div class="grid-cell btn indicator-green" id="start-timer-button" onclick="stepSwitcher()">
+              <p class="sub-description" id="start-button" >START</p>
+          </div>
+
+          <!--Setup Time-->
+          <div class="grid-cell" id="setup-time-container">
+                  <p class="sub-description">SETUP</p>
+                  <p class="right-column-timer" id="setup-time">
+                    <span class="right-column-timer" id="timer-hours-setup">00</span>
+                    <span class="right-column-timer" id="timer-minutes-setup">:00</span>
+                    <span class="right-column-timer" id="timer-seconds-setup">:00</span>
+                  </p>
+          </div>
+          <div class="grid-cell" id="setup-finish-button" >
+                  <p class="sub-description" id="setup-button">IDLE</p>
+          </div>
+
+          <!--Part Takt Time-->
+          <div class="split-grid-cell" id="part-takt-container">
+              <div class="split">
+                  <p class="sub-description">WORKING</p>
+                  <p class="right-column-timer" id="part-takt">
+                    <span class="right-column-timer" id="timer-hours-work">00</span>
+                    <span class="right-column-timer" id="timer-minutes-work">:00</span>
+                    <span class="right-column-timer" id="timer-seconds-work">:00</span>
+                  </p>
+              </div>
+              <div class="hide">
+                  <p>1X ITDXXXX</p>
+                  <p>@ 00:00:00:00</p>
+              </div>
+          </div>
+          <div class="grid-cell" id="part-finish-button" >
+              <p class="sub-description" id="part-takt-button">IDLE</p>
+          </div>
+
+          <!--Teardown Time-->
+          <div class="grid-cell" id="teardown-time-container">
+              <p class="sub-description">TEARDOWN</p>
+              <p class="right-column-timer" id="teardown-time">
+                <span class="right-column-timer" id="timer-hours-tear">00</span>
+                    <span class="right-column-timer" id="timer-minutes-tear">:00</span>
+                    <span class="right-column-timer" id="timer-seconds-tear">:00</span>
+              </p>
+          </div>
+          <div class="grid-cell" id="teardown-finish-button" >
+              <p class="sub-description" id="teardown-time-button">IDLE</p>
+          </div>
+
+          <!--Completed Time-->
+          <div class="grid-cell" id="finish-time-container">
+              <p class="sub-description">ESTIMATED FINISH TIME</p>
+              <p class="right-column-timer" id="finish-time">12:00AM</p>
+          </div>
+          <div class="grid-cell" id="finished-log-button" onclick="beginAgain()">
+              <p class="sub-description" id="finish-button">RESET</p>
+          </div>
+      </div>
+  </div>
+</div>
+    <script src="timer.js" type="text/javascript"></script>
+  </body>
+
+</html>
